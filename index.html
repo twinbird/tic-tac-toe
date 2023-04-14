@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>tic-tac-toe</title>
+<style>
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.game-board, .game-board td {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+.game-board td {
+    width: 45px;
+    height: 45px;
+    font-size: 32px;
+    text-align: center;
+}
+</style>
+</head>
+    <body>
+        <div class="content">
+            <div>
+                <div>三目並べ</div>
+                <div id="title"><span id="turn-title"></span>のターン</div>
+                <table class="game-board">
+                    <tr>
+                        <td id="cell0"></td>
+                        <td id="cell1"></td>
+                        <td id="cell2"></td>
+                    </tr>
+                    <tr>
+                        <td id="cell3"></td>
+                        <td id="cell4"></td>
+                        <td id="cell5"></td>
+                    </tr>
+                    <tr>
+                        <td id="cell6"></td>
+                        <td id="cell7"></td>
+                        <td id="cell8"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+    <script src="index.js"></script>
+</html>
