@@ -4,6 +4,8 @@
 const forward = "〇"
 // 後攻
 const backward = "×"
+// 引き分けのマーク
+const draw = "-"
 
 // コンピューターの利用するマーク
 const botMark = backward
@@ -31,23 +33,27 @@ function complete(ary, player) {
 // 勝利判定
 // ゲーム終了でtrue
 function judge() {
-  // 1行目そろった
-  if (complete([0, 1, 2], currentPlayer)) return true
-  // 2行目そろった
-  if (complete([3, 4, 5], currentPlayer)) return true
-  // 3行目そろった
-  if (complete([6, 7, 8], currentPlayer)) return true
-  // 1列目そろった
-  if (complete([0, 3, 6], currentPlayer)) return true
-  // 2列目そろった
-  if (complete([1, 4, 7], currentPlayer)) return true
-  // 3列目そろった
-  if (complete([2, 5, 8], currentPlayer)) return true
-  // 左上から右下のななめがそろった
-  if (complete([0, 4, 8], currentPlayer)) return true
-  // 右上から左下のななめがそろった
-  if (complete([2, 4, 6], currentPlayer)) return true
+  // そろったので勝ちが決まり
+  if (complete([0, 1, 2], currentPlayer) || // 1行目そろった
+      complete([3, 4, 5], currentPlayer) || // 2行目そろった
+      complete([6, 7, 8], currentPlayer) || // 3行目そろった
+      complete([0, 3, 6], currentPlayer) || // 1列目そろった
+      complete([1, 4, 7], currentPlayer) || // 2列目そろった
+      complete([2, 5, 8], currentPlayer) || // 3列目そろった
+      complete([0, 4, 8], currentPlayer) || // 左上から右下のななめがそろった
+      complete([2, 4, 6], currentPlayer)    // 右上から左下のななめがそろった
+  ) {
+    winner = currentPlayer
+    return true
+  }
+  
+  // すでに打てる箇所がなければ引き分け
+  if (board.every((e) => e !== null)) {
+    winner = draw
+    return true
+  }
 
+  // まだ終わってない
   return false
 }
 
@@ -62,7 +68,11 @@ function render() {
     document.getElementById(`cell${i}`).innerHTML = board[i]
   }
 
-  if (winner) {
+  if (winner === draw) {
+    document.getElementById('winner-label').innerHTML = "引き分け"
+    document.getElementById('title').style.display = 'hidden'
+    document.getElementById('retry-btn').style.display = 'block'
+  }  else if (winner) {
     document.getElementById('winner-label').innerHTML = currentPlayer + "の勝ち"
     document.getElementById('title').style.display = 'hidden'
     document.getElementById('retry-btn').style.display = 'block'
@@ -76,9 +86,7 @@ function cellSelect(cellIdx) {
   if (winner) return
   board[Number(cellIdx)] = currentPlayer
 
-  if (judge()) {
-    winner = currentPlayer
-  } else {
+  if (!judge()) {
     changePlayer()
   }
 
@@ -92,6 +100,9 @@ function getRandomIntInRange(min, max) {
 
 // コンピューターの打ち手処理
 function botPlay() {
+  // 打てる手がない
+  if (board.every((e) => e !== null)) return
+
   // boardの空きをランダムに探す
   let r = getRandomIntInRange(0, 8)
   while (board[r] != null) {
