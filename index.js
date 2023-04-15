@@ -26,8 +26,6 @@ function complete(ary, player) {
 // 勝利判定
 // ゲーム終了でtrue
 function judge() {
-  console.log(board)
-  console.log(complete([0, 4, 8], currentPlayer))
   // 1行目そろった
   if (complete([0, 1, 2], currentPlayer)) return true
   // 2行目そろった
@@ -60,7 +58,9 @@ function render() {
   }
 
   if (winner) {
-    document.getElementById('title').innerHTML = currentPlayer + "の勝ち"
+    document.getElementById('winner-label').innerHTML = currentPlayer + "の勝ち"
+    document.getElementById('title').style.display = 'hidden'
+    document.getElementById('retry-btn').style.display = 'block'
   } else {
     document.getElementById('turn-title').innerHTML = currentPlayer
   }
@@ -82,12 +82,28 @@ function cellClicked(e) {
   render()
 }
 
+// ゲームを初期状態に戻す
+function initGame() {
+  currentPlayer = forward
+  board = new Array(9).fill(null)
+  winner = null
+  document.getElementById('title').style.display = 'block'
+  document.getElementById('retry-btn').style.display = 'none'
+  document.getElementById('winner-label').innerHTML = ''
+}
+
 window.onload = function() {
+  // データと表示を初期化
+  initGame()
+
   // セルへクリックイベントを割り当て
   const cells = document.querySelectorAll('.game-board td')
   for (let c of cells) {
     c.addEventListener('click', cellClicked)
   }
+
+  // もう一度ボタンへのイベント割り当て
+  document.getElementById('retry-btn').addEventListener('click', initGame)
 
   // 最初の描画
   render()
