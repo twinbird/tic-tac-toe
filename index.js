@@ -66,13 +66,10 @@ function render() {
   }
 }
 
-// 盤面の1セルクリック時のイベント
-function cellClicked(e) {
+// 盤面の1セルを選択する
+function cellSelect(cellIdx) {
   if (winner) return
-
-  const id = e.target.id
-  const cellNo = id.replace('cell', '')
-  board[Number(cellNo)] = currentPlayer
+  board[Number(cellIdx)] = currentPlayer
 
   if (judge()) {
     winner = currentPlayer
@@ -80,6 +77,13 @@ function cellClicked(e) {
   changePlayer()
 
   render()
+}
+
+// 盤面の1セルクリック時のイベント
+function cellClicked(e) {
+  const id = e.target.id
+  const cellNo = id.replace('cell', '')
+  cellSelect(cellNo)
 }
 
 // ゲームを初期状態に戻す
