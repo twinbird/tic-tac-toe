@@ -73,8 +73,9 @@ function cellSelect(cellIdx) {
 
   if (judge()) {
     winner = currentPlayer
+  } else {
+    changePlayer()
   }
-  changePlayer()
 
   render()
 }
