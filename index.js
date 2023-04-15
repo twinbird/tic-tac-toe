@@ -5,6 +5,11 @@ const forward = "〇"
 // 後攻
 const backward = "×"
 
+// コンピューターの利用するマーク
+const botMark = backward
+// プレイヤーの利用するマーク
+const playerMark = forward
+
 // 現在のターンのプレイヤー
 let currentPlayer = forward
 
@@ -80,11 +85,32 @@ function cellSelect(cellIdx) {
   render()
 }
 
+// minからmaxの範囲で乱数を返す
+function getRandomIntInRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// コンピューターの打ち手処理
+function botPlay() {
+  // boardの空きをランダムに探す
+  let r = getRandomIntInRange(0, 8)
+  while (board[r] != null) {
+    r = getRandomIntInRange(0, 8)
+  }
+
+  // 打つ
+  cellSelect(r)
+}
+
 // 盤面の1セルクリック時のイベント
 function cellClicked(e) {
+  if (currentPlayer === botMark) return
+
   const id = e.target.id
   const cellNo = id.replace('cell', '')
   cellSelect(cellNo)
+
+  botPlay()
 }
 
 // ゲームを初期状態に戻す
@@ -95,6 +121,8 @@ function initGame() {
   document.getElementById('title').style.display = 'block'
   document.getElementById('retry-btn').style.display = 'none'
   document.getElementById('winner-label').innerHTML = ''
+
+  render()
 }
 
 window.onload = function() {
